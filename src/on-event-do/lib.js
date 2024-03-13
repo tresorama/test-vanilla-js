@@ -35,7 +35,7 @@ export class OnEventDo_Orchestrator {
     // so that lazy added DOM element can be initialized in different moment
     document.querySelectorAll('[data-on-event-do]').forEach(el => {
       if (OnEventDo_Orchestrator.isElementAlreadyInitialized(el)) return;
-      const instance = new OnEventDo(el);
+      const instance = [el, new OnEventDo(el)];
       OnEventDo_Orchestrator.instances.push(instance);
     });
   }

@@ -1,4 +1,18 @@
-const { debounce } = Utils;
+const { onDomReady, debounce } = Utils;
+
+// on load
+onDomReady(() => {
+  // intercept form submitted without JS
+  // and console log something!
+  // Because we want to seee when a form
+  // is used with or without JS progressive enhancement
+  window.addEventListener("submit", (e) => {
+    e.preventDefault();
+    console.log("Form submitted without JS");
+    ConsoleLogSingleton?.log("Form submitted without JS");
+  });
+});
+
 
 // utils
 const fakeFetch = (url, requestPayload) => {
