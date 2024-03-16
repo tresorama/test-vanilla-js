@@ -1,4 +1,5 @@
 import anime from "animejs";
+import { Utils } from '../../global-utils';
 const { injectCss, createTrapFocus } = Utils;
 
 document.body.insertAdjacentHTML(

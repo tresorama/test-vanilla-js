@@ -1,5 +1,3 @@
-
-
 const SCOPE = "SECTION-" + Date.now();
 
 document.body.insertAdjacentHTML('afterbegin', /*html*/`

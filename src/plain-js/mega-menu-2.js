@@ -1,4 +1,5 @@
 import anime from "animejs";
+import { Utils } from '../global-utils';
 const { createPortal, createRestoreDOMPosition, animeFlip, debounce } = Utils;
 
 document.body.insertAdjacentHTML(

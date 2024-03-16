@@ -1,4 +1,6 @@
 import anime from "animejs";
+import { Utils } from '../global-utils';
+
 const {
   createPortal,
   createRestoreDOMPosition,

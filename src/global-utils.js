@@ -1,4 +1,4 @@
-const Utils = {
+export const Utils = {
   // BASIC
   /**
    * @param {() => void} callback
@@ -386,5 +386,21 @@ const Utils = {
     // animate
     return animate(pre, post);
   },
+  // NUMBER
+  /**
+   * @param {Number} value 
+   * @param {Number} min 
+   * @param {Number} max 
+   */
+  wrap: function (value, min, max) {
+    if (value > max) return min;
+    if (value < min) return max;
+    return value;
+  },
+  /**
+   * @param  {...Number} nums 
+   */
+  sum: function (...nums) {
+    return nums.reduce((acc, curr) => acc + curr, 0);
+  },
 };
-window.Utils = Utils;

@@ -1,3 +1,4 @@
+import { Utils } from '../global-utils';
 const { debounce, throttleLeading } = Utils;
 
 document.body.insertAdjacentHTML(

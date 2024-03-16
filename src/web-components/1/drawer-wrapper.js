@@ -1,4 +1,5 @@
 import anime from "animejs";
+import { Utils } from '../../global-utils';
 const { injectCss, createTrapFocus } = Utils;
 
 document.body.insertAdjacentHTML(
@@ -216,8 +217,8 @@ class DrawerToggler extends HTMLElement {
       throw new Error("target attribute not found on <drawer-toggler>");
     }
     const /** @type{DrawerWrapper | null} */ drawer = document.querySelector(
-        `drawer-wrapper#${targetId}`,
-      );
+      `drawer-wrapper#${targetId}`,
+    );
     if (!drawer) {
       console.error("Missing <drawer-wrapper> with id: " + targetId);
     }
@@ -233,6 +234,6 @@ class DrawerToggler extends HTMLElement {
 customElements.define("drawer-toggler", DrawerToggler);
 window.DrawerToggler = DrawerToggler;
 
-class DrawerOverlay extends HTMLElement {}
+class DrawerOverlay extends HTMLElement { }
 customElements.define("drawer-overlay", DrawerOverlay);
 window.DrawerOverlay = DrawerOverlay;

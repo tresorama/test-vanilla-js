@@ -1,3 +1,5 @@
+import { Utils } from '../global-utils';
+
 const { createOnClickOutside } = Utils;
 
 // document.body.insertAdjacentHTML(

@@ -1,3 +1,4 @@
+import { Utils } from "../../global-utils";
 const { onDomReady, debounce } = Utils;
 
 // on load

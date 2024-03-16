@@ -1,4 +1,6 @@
 import anime from "animejs";
+import { Utils } from '../global-utils';
+
 const {
   createPortal,
   createRestoreDOMPosition,
@@ -138,11 +140,11 @@ document.body.insertAdjacentHTML(
 
 (() => {
   const /** @type{HTMLElement} */ scope =
-      document.querySelector(".mega-menu-4");
+    document.querySelector(".mega-menu-4");
   const /** @type{HTMLElement} */ menu = scope.querySelector(".menu");
   const /** @type{HTMLElement[]} */ menuItemsLevel0 = [
-      ...scope.querySelectorAll(".menu > .menu-item"),
-    ];
+    ...scope.querySelectorAll(".menu > .menu-item"),
+  ];
 
   // add necassary thing to DOM
   menuItemsLevel0.forEach((item) => {

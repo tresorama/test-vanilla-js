@@ -1,3 +1,4 @@
+import { Utils } from '../../global-utils';
 const { createTrapFocus, createOnKeyPress } = Utils;
 
 document.body.insertAdjacentHTML(
