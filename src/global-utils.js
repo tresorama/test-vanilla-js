@@ -220,6 +220,17 @@ export const Utils = {
       el.style.setProperty(propKey, String(properties[propKey]));
     }
   },
+  /**
+   * 
+   * @param {HTMLElement} el 
+   * @returns 
+   */
+  isInViewport: function (el) {
+    const { left, right, top, bottom } = el.getBoundingClientRect();
+    const isInsideHorizontal = left >= 0 && right <= window.innerWidth;
+    const isInsideVertical = top >= 0 && bottom <= window.innerHeight;
+    return isInsideHorizontal && isInsideVertical;
+  },
   // PORTAL
   /**
    * Create a DOM element to be used as portal
@@ -403,4 +414,37 @@ export const Utils = {
   sum: function (...nums) {
     return nums.reduce((acc, curr) => acc + curr, 0);
   },
+  /**
+   * Clamp function, constraints a value to be in a range.
+   * Outliers will be clamped to the relevant extreme of the range.
+   * @param {Number} value Vlue you want to clamp
+   * @param {Number} min Minimin possibile value.
+   * @param {Number} max Maximinum possible value.
+   */
+  clamp: function (value, min, max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+  },
+  /**
+ * Lerp function, used to get a value in range based on a percentage.
+ * @param {Number} min Lower part of the `min-max` range. Minumum value passibile.
+ * @param {Number} max Upper part of the `min-max` range. Maximum value possible.
+ * @param {Number} t Decimal between `0` and `1`, which rapresent where value lives in min-max range.
+ */
+  lerp: function (min, max, t) {
+    const value = (max - min) * t + min;
+    return value;
+  },
+  /**
+   * Lerp Inversed function, used to get the percentage of a value in a range.
+   * Return value is a decimal between `0` and `1`
+   * @param {Number} min Lower part of the `min-max` range. Minumum value passibile.
+   * @param {Number} max Upper part of the `min-max` range. Maximum value possible.
+   * @param {Number} value Number that must be in range min-max, rapresent the value that you want to know where it sits in -b range.
+   */
+  lerpInverse: function (min, max, value) {
+    const t = (value - min) / (max - min);
+    return t;
+  }
 };
