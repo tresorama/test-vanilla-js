@@ -70,7 +70,6 @@ class TwoToggle extends HTMLElement {
     const { eventTypes, selector, callback } = this.optionsPatternOne;
 
     const handleEvent = () => {
-      debugger;
       // get target elemeents
       const targets = [...document.querySelectorAll(selector)];
       targets.forEach(target => {

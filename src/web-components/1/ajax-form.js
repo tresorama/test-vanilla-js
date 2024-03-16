@@ -116,7 +116,6 @@ class AjaxForm extends HTMLElement {
   }
 
   async handleSubmit(/** @type {SubmitEvent | Event} */ e) {
-    debugger;
     e.preventDefault();
     const form = this.getForm();
 

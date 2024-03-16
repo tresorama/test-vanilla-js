@@ -105,7 +105,6 @@ class DrawerWrapper extends HTMLElement {
     // trap focus when opened
     const trapFocus = createTrapFocus(content);
     this.addEventListener("toggle", () => {
-      debugger;
       if (this.state.isOpen) {
         trapFocus.enable();
         trapFocus.focusFirstChild();
@@ -126,7 +125,6 @@ class DrawerWrapper extends HTMLElement {
         this.classList.add("is-entering");
       },
       complete: () => {
-        debugger;
         this.classList.remove("is-entering");
         this.setAttribute("open", "");
         this.state.isOpen = true;

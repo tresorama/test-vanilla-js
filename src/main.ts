@@ -31,4 +31,4 @@ import "./web-components/2/two-modal";
 import "./web-components/2/two-dropdown";
 import "./plain-js/sliders";
 import "./plain-js/scroll-detector";
-import "./plain-js/sliders-1";
+import "./plain-js/slider-1";

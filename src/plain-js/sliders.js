@@ -48,17 +48,17 @@ document.body.insertAdjacentHTML(
       padding: 1rem 0;
     }
 
-    /* SLIDER TWO */
-    #${SCOPE} .TWO.slider {
+    /* SLIDER TWO TWO-A */
+    #${SCOPE} .TWO.TWO-A.slider {
       height: 400px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    #${SCOPE} .TWO .slider__slide {
+    #${SCOPE} .TWO.TWO-A .slider__slide {
       width: 20%;
     }
-    #${SCOPE} .TWO .slider__slide img {
+    #${SCOPE} .TWO.TWO-A .slider__slide img {
       height: 100%;
       width: 100%;
       object-fit: cover;
@@ -68,31 +68,32 @@ document.body.insertAdjacentHTML(
       --s: 1;
       --tx: 0;
     }
-    #${SCOPE} .TWO .slider__slide.in-view-index-0 img {
+    #${SCOPE} .TWO.TWO-A .slider__slide.in-view-index-0 img {
       --s: 1;
       --tx: -50%;
     }
-    #${SCOPE} .TWO .slider__slide.in-view-index-1 img {
+    #${SCOPE} .TWO.TWO-A .slider__slide.in-view-index-1 img {
       --s: 1;
       --tx: -50%;
     }
-    #${SCOPE} .TWO .slider__slide.in-view-index-2 img {
+    #${SCOPE} .TWO.TWO-A .slider__slide.in-view-index-2 img {
       --s: 2;
       --tx: 0%;
     }
-    #${SCOPE} .TWO .slider__slide.in-view-index-3 img {
+    #${SCOPE} .TWO.TWO-A .slider__slide.in-view-index-3 img {
       --s: 1;
       --tx: 50%;
     }
-    #${SCOPE} .TWO .slider__slide.in-view-index-4 img {
+    #${SCOPE} .TWO.TWO-A .slider__slide.in-view-index-4 img {
       --s: 1;
       --tx: 50%;
     }
-    #${SCOPE} .TWO .slider__slide.in-view-index-2 {
+    #${SCOPE} .TWO.TWO-A .slider__slide.in-view-index-2 {
       z-index: 1;
     }
+
   </style>
-  <section id="${SCOPE}" class="py-6 px-8 flex flex-col gap-12">
+  <section id="${SCOPE}" class="py-6 px-8 flex flex-col gap-6">
 
     <div class="slider__debug-state"></div>
 
@@ -116,7 +117,7 @@ document.body.insertAdjacentHTML(
       </div>
     </div>
     
-    <div class="slider TWO">
+    <div class="slider TWO TWO-A">
       <div class="slider__track">
         <div class="slider__slide"><img src="https://source.unsplash.com/random/700x385/?v=8599835921329489&amp;italy="/><span>0</span></div>
         <div class="slider__slide"><img src="https://source.unsplash.com/random/1000x385/?v=1455740963839355&amp;italy="/><span>1</span></div>
@@ -132,33 +133,43 @@ document.body.insertAdjacentHTML(
 );
 
 (() => {
-  const sliderOne = initSliderOne();
-  const sliderTwo = initSliderTwo();
+  // slider controls (next / prev / go to index ) are used tp controll every slider
+  const scope = /** @type {HTMLElement} */(document.querySelector(`#${SCOPE}`));
   const prev = /** @type {HTMLElement?}*/ (document.querySelector(`#${SCOPE} .slider__prev`));
   const next = /** @type {HTMLElement?}*/ (document.querySelector(`#${SCOPE} .slider__next`));
   const formGoToIndex = /** @type {HTMLFormElement?}*/ (document.querySelector(`#${SCOPE} .slider__goToIndex`));
 
+  // initi slider instances
+  const slidersOne = [...scope.querySelectorAll('.slider.ONE')].map(initSliderOne);
+  const slidersTwo = [...scope.querySelectorAll('.slider.TWO')].map(initSliderTwo);
+
   // add listenres
   prev.addEventListener('click', () => {
-    sliderOne.goPrev();
-    sliderTwo.goPrev();
+    slidersOne.forEach(s => s.goPrev());
+    slidersTwo.forEach(s => s.goPrev());
   });
   next.addEventListener('click', () => {
-    sliderOne.goNext();
-    sliderTwo.goNext();
+    slidersOne.forEach(s => s.goNext());
+    slidersTwo.forEach(s => s.goNext());
   });
   formGoToIndex.addEventListener('submit', e => {
     e.preventDefault();
     const newIndex = Number(formGoToIndex.elements["index"].value);
-    sliderOne.goToIndex(newIndex);
-    sliderTwo.goToIndex(newIndex);
+    slidersOne.forEach(s => s.goToIndex(newIndex));
+    slidersTwo.forEach(s => s.goToIndex(newIndex));
   });
+
+  // on load
+  setTimeout(() => {
+    slidersOne.forEach(s => s.goToIndex(0));
+    slidersTwo.forEach(s => s.goToIndex(0));
+  }, 2000);
 
   /* =================================================== 
         SLIDER ONE
   =================================================== */
-  function initSliderOne() {
-    const slider = document.querySelector(`#${SCOPE} .slider.ONE .slider__track`);
+  function initSliderOne(/** @type {HTMLElement} */sliderWrapper) {
+    const slider = /** @type {HTMLElement} */ (sliderWrapper.querySelector('.slider__track'));
     const slides = /** @type {(HTMLElement)[]}*/ (Array.from(slider.querySelectorAll('.slider__slide')));
 
     // mutate DOM
@@ -272,8 +283,8 @@ document.body.insertAdjacentHTML(
   /* =================================================== 
         SLIDER TWO
   =================================================== */
-  function initSliderTwo() {
-    const slider = document.querySelector(`#${SCOPE} .slider.TWO .slider__track`);
+  function initSliderTwo(/** @type {HTMLElement} */sliderWrapper) {
+    const slider = /** @type {HTMLElement} */ (sliderWrapper.querySelector('.slider__track'));
     const slides = /** @type {(HTMLElement)[]}*/ (Array.from(slider.querySelectorAll('.slider__slide')));
 
     // mutate DOM
@@ -288,7 +299,6 @@ document.body.insertAdjacentHTML(
         const h = () => {
           el.removeEventListener('transitionend', h);
           el.style.transition = '';
-          debugger;
           resolve();
         };
         el.addEventListener('transitionend', h);
@@ -442,4 +452,5 @@ document.body.insertAdjacentHTML(
       goToIndex,
     };
   }
+
 })();
