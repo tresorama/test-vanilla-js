@@ -32,3 +32,4 @@ import "./web-components/2/two-dropdown";
 import "./plain-js/sliders";
 import "./plain-js/scroll-detector";
 import "./plain-js/slider-1";
+import "./plain-js/marquee";
