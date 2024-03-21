@@ -6,7 +6,7 @@ const { traverseDOMTree, injectCss, setElementStyle } = Utils;
 
 document.body.insertAdjacentHTML(
   "afterbegin",
-  `
+  /*html*/`
   <style>
   /* Consumer CSS */
 
@@ -108,10 +108,9 @@ document.body.insertAdjacentHTML(
 );
 
 class MegaMenu3b extends HTMLElement {
-  css = `
+  css = /*css*/`
       mega-menu-3b ul {
         list-style: none;
-        border: solid;
         padding: 0;
         margin: 0;
       }

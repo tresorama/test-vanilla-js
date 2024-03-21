@@ -33,3 +33,5 @@ import "./plain-js/sliders";
 import "./plain-js/scroll-detector";
 import "./plain-js/slider-1";
 import "./plain-js/marquee";
+import "./web-components/2/two-accordion";
+import "./web-components/2/two-marquee";
