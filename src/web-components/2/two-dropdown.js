@@ -1,5 +1,5 @@
-import { Utils } from '../../global-utils';
-const { createTrapFocus, createOnKeyPress } = Utils;
+import { Utils } from '../../utils/global-utils';
+const { createTrapFocus, createOnKeyPress, createOnClickOutside } = Utils;
 
 document.body.insertAdjacentHTML(
   "afterbegin",
@@ -17,24 +17,29 @@ document.body.insertAdjacentHTML(
       top: 100%;
       left: 0;
       /* Exit Animation */
+      visibility: hidden;
       transform-origin: top;
       transform: scaleY(0);
-      transition: transform 0.05s 0.1s;
-    }
-    two-dropdown-content * {
-      /* Exit Animation */
-      opacity: 0;
-      transition: opacity 0.15s;
+      transition: visibility 0s 0.15s, transform 0.05s 0.1s;
     }
     two-dropdown[open] two-dropdown-content {
       /* Enter Animation */
+      visibility: visible;
       transform: none;
-      transition: transform 0.10s 0s;
+      transition: visibility 0s 0s, transform 0.10s 0s;
+    }
+    
+    two-dropdown-content * {
+      /* Exit Animation */
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s 0.15s, opacity 0.15s;
     }
     two-dropdown[open] two-dropdown-content * {
       /* Enter Animation */
+      visibility: visible;
       opacity: 1;
-      transition: opacity 0.10s 0.10s;
+      transition: visibility 0s 0s, opacity 0.10s 0.10s;
     }
   </style>
 `);
@@ -45,10 +50,11 @@ document.body.insertAdjacentHTML(
 <div class="py-12 px-8">
 
     <two-dropdown
-      open
       data-open-on-hover
       data-open-on-click
       data-enable-trap-focus
+      data-enable-close-on-click-outside
+      data-enable-close-on-esc-press
     >
       <two-dropdown-toggler>
         <button class="p-2 border">Open Dropdown</button>
@@ -68,45 +74,53 @@ document.body.insertAdjacentHTML(
 
 // Web Component definition
 class TwoDropdown extends HTMLElement {
-  events = {
-    toggle: new CustomEvent('toggle'),
-  };
-  get state() {
-    return {
-      isOpen: this.hasAttribute('open'),
-    };
-  };
+  // Props
   get options() {
     return {
       enableTrapFocus: this.hasAttribute('data-enable-trap-focus'),
       openOnHover: this.hasAttribute('data-open-on-hover'),
       openOnClick: this.hasAttribute('data-open-on-click'),
+      enableCloseOnClickOutside: this.hasAttribute('data-enable-close-on-click-outside'),
+      enableCloseOnEscPress: this.hasAttribute('data-enable-close-on-esc-press'),
     };
   }
-  setState(/** @type {boolean} */newState) {
-    if (newState) this.setAttribute('open', '');
-    else this.removeAttribute('open');
-
-    this.dispatchEvent(this.events.toggle);
-  }
   // public API
-  openDropdown() {
-    this.setState(true);
+  openDropdown() { this.setState({ name: 'open' }); }
+  closeDropdown() { this.setState({ name: 'close' }); }
+  toggleDropdown() { this.state.isOpen ? this.closeDropdown() : this.openDropdown(); }
+
+  // Events
+  events = {
+    toggle: new CustomEvent('toggle'),
+  };
+  // State
+  get state() {
+    return {
+      isOpen: this.hasAttribute('open'),
+    };
+  };
+  /**
+   * @param {{
+   *   name: "open" | "close"
+   * }} action 
+   */
+  setState(action) {
+    if (action.name === 'open') {
+      // update state
+      this.setAttribute('open', '');
+      // trigger event
+      this.dispatchEvent(this.events.toggle);
+      return;
+    }
+    if (action.name === 'close') {
+      // update state
+      this.removeAttribute('open');
+      // trigger event
+      this.dispatchEvent(this.events.toggle);
+      return;
+    }
   }
-  closeDropdown() {
-    this.setState(false);
-  }
-  toggleDropdown() {
-    if (this.state.isOpen) this.closeDropdown();
-    else this.openDropdown();
-  }
-  // on mount
-  connectedCallback() {
-    this.initDOM();
-    this.initListeners();
-  }
-  initDOM() {
-  }
+  // Elements
   get elements() {
     return {
       /** @type {HTMLElement?} */
@@ -115,9 +129,16 @@ class TwoDropdown extends HTMLElement {
       content: this.querySelector('two-dropdown-content'),
     };
   }
+
+  // on mount
+  connectedCallback() {
+    this.initDOM();
+    this.initListeners();
+  }
+  initDOM() { }
   initListeners() {
     const { toggler, content } = this.elements;
-    const { openOnHover, openOnClick, enableTrapFocus } = this.options;
+    const { openOnHover, openOnClick, enableTrapFocus, enableCloseOnClickOutside, enableCloseOnEscPress } = this.options;
 
     // listen toggler click/hover
     if (openOnClick) {
@@ -139,6 +160,30 @@ class TwoDropdown extends HTMLElement {
           trapFocus.disable();
           trapFocus.restoreFocus();
         }
+      });
+    }
+
+    if (enableCloseOnClickOutside) {
+      const handleClickOutside = createOnClickOutside(this, (e) => {
+        if (!this.state.isOpen) return;
+        e.preventDefault();
+        e.stopPropagation();
+        this.closeDropdown();
+      });
+      handleClickOutside.enable();
+    }
+
+    if (enableCloseOnEscPress) {
+      const handleKeyPress = createOnKeyPress(this, (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          this.closeDropdown();
+        }
+      });
+      this.addEventListener('toggle', () => {
+        if (this.state.isOpen) handleKeyPress.enable();
+        else handleKeyPress.disable();
       });
     }
 

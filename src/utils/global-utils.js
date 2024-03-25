@@ -221,9 +221,7 @@ export const Utils = {
     }
   },
   /**
-   * 
    * @param {HTMLElement} el 
-   * @returns 
    */
   isInViewport: function (el) {
     const { left, right, top, bottom } = el.getBoundingClientRect();
@@ -339,12 +337,12 @@ export const Utils = {
   },
   /**
    * @param {HTMLElement} el
-   * @param {() => void} callback
+   * @param {(e:Event) => void} callback
    */
   createOnClickOutside: function (el, callback) {
     const handler = (event) => {
       const isOutside = !el.contains(event.target);
-      if (isOutside) callback();
+      if (isOutside) callback(event);
     };
     return {
       enable: () => {

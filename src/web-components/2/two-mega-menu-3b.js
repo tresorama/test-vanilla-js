@@ -1,5 +1,5 @@
 import "./two-mega-menu-3b.style.css";
-import { Utils } from "../../global-utils";
+import { Utils } from "../../utils/global-utils";
 
 const { traverseDOMTree } = Utils;
 

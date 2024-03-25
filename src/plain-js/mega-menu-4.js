@@ -1,5 +1,5 @@
 import anime from "animejs";
-import { Utils } from '../global-utils';
+import { Utils } from '../utils/global-utils';
 
 const {
   createPortal,

@@ -1,4 +1,4 @@
-import { Utils } from '../global-utils';
+import { Utils } from '../utils/global-utils';
 const { wrap, sum } = Utils;
 
 const SCOPE = "SECTION-" + Date.now() + "-scroll-detector";

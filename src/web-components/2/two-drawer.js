@@ -1,4 +1,4 @@
-import { Utils } from '../../global-utils';
+import { Utils } from '../../utils/global-utils';
 const { createTrapFocus, createOnKeyPress } = Utils;
 
 document.body.insertAdjacentHTML(
@@ -112,14 +112,7 @@ document.body.insertAdjacentHTML(
 
 // Web Component definition
 class TwoDrawer extends HTMLElement {
-  events = {
-    toggle: new CustomEvent('toggle'),
-  };
-  get state() {
-    return {
-      isOpen: this.hasAttribute('open'),
-    };
-  };
+  // Props
   get options() {
     return {
       enableTrapFocus: this.hasAttribute('data-enable-trap-focus'),
@@ -128,23 +121,51 @@ class TwoDrawer extends HTMLElement {
       disableBodyScrollWhenOpen: this.hasAttribute('data-disable-body-scroll-when-open'),
     };
   }
-  setState(/** @type {boolean} */newState) {
-    if (newState) this.setAttribute('open', '');
-    else this.removeAttribute('open');
-
-    this.dispatchEvent(this.events.toggle);
-  }
   // public API
-  openDrawer() {
-    this.setState(true);
+  openDrawer() { this.setState({ name: 'open' }); }
+  closeDrawer() { this.setState({ name: 'close' }); }
+  toggleDrawer() { this.state.isOpen ? this.closeDrawer() : this.openDrawer(); }
+
+  // Events
+  events = {
+    toggle: () => new CustomEvent('toggle'),
+  };
+  // State
+  get state() {
+    return {
+      isOpen: this.hasAttribute('open'),
+    };
+  };
+  /**
+   * @param {{
+  *   name: "open" | "close"
+  * }} action 
+  */
+  setState(action) {
+    if (action.name === 'open') {
+      // update state
+      this.setAttribute('open', '');
+      // trigger event
+      this.dispatchEvent(this.events.toggle());
+      return;
+    }
+    if (action.name === 'close') {
+      // update state
+      this.removeAttribute('open');
+      // trigger event
+      this.dispatchEvent(this.events.toggle());
+      return;
+    }
   }
-  closeDrawer() {
-    this.setState(false);
+
+  // Elements
+  get elements() {
+    return {
+      backdrop: this.querySelector('two-drawer-backdrop'),
+      content: this.querySelector('[data-two-drawer-content]'),
+    };
   }
-  toggleDrawer() {
-    if (this.state.isOpen) this.closeDrawer();
-    else this.openDrawer();
-  }
+
   // on mount
   connectedCallback() {
     this.initDOM();
@@ -158,25 +179,20 @@ class TwoDrawer extends HTMLElement {
     const content = backdrop.nextElementSibling;
     content.setAttribute('data-two-drawer-content', '');
   }
-  get elements() {
-    return {
-      backdrop: this.querySelector('two-drawer-backdrop'),
-      content: this.querySelector('[data-two-drawer-content]'),
-    };
-  }
+
   initListeners() {
     const { backdrop, content } = this.elements;
     const { enableTrapFocus, enableCloseOnEscPress, enableCloseOnBackdropPress, disableBodyScrollWhenOpen } = this.options;
 
     if (enableCloseOnBackdropPress) {
-      // on overlay click close modal
+      // on overlay click => close modal
       backdrop.addEventListener("click", () => {
         this.closeDrawer();
       });
     }
 
     if (enableCloseOnEscPress) {
-      // on "Esc" press close modal
+      // on "Esc" press => close modal
       document.addEventListener("keydown", (e) => {
         if (!this.state.isOpen) return;
         if (e.key === "Escape") this.closeDrawer();
